@@ -1,0 +1,50 @@
+goft8 — a clean-room Go implementation of the FT8 digital mode
+
+Copyright (c) 2026 ColonelBlimp (7Q5MLV)
+Licensed under the MIT License (see LICENSE).
+
+===========================================================================
+Clean-room attribution
+===========================================================================
+
+This library is a clean-room re-implementation of the FT8 decoder and
+encoder algorithms in Go. No source code from WSJT-X, JTDX, or any other
+GPL-licensed project is included in this repository. All .go source files
+are original work, derived from study of the published FT8/FT4 protocol
+specification and the public WSJT-X 2.7.0 Fortran reference.
+
+The Go source files are licensed under MIT (see LICENSE). The FT8/FT4
+protocol itself is documented in:
+
+  Taylor, Joseph H. (K1JT); Walker, Steven J. (W9MDB); et al.
+  "The FT4 and FT8 Communication Protocols", QEX July/August 2020.
+  https://wsjt.sourceforge.io/FT4_FT8_QEX.pdf
+
+===========================================================================
+Developer-only diagnostic tooling
+===========================================================================
+
+The Fortran programs under internal/fortran_test/ are developer-only
+diagnostic tools used to compare the Go implementation against the WSJT-X
+2.7.0 reference. They call WSJT-X subroutines at compile time via static
+linking against the GPLv3 WSJT-X source tree.
+
+The .f90 source files under internal/fortran_test/ are our own work
+(subroutine calls, parameter setup, and I/O; no copied WSJT-X code) and
+are licensed under MIT along with the rest of this repository.
+
+The compiled binaries produced from these .f90 sources are GPLv3-licensed
+by inheritance from WSJT-X and MUST NOT be distributed. These binaries are
+produced in a temporary directory and never committed to this repository
+(see internal/fortran_test/.gitignore).
+
+===========================================================================
+Reference codebases (not included)
+===========================================================================
+
+Development of this library referenced the following publicly available
+GPLv3 projects as protocol/algorithm references only. No source from these
+projects is included in this repository.
+
+  WSJT-X 2.7.0     https://sourceforge.net/projects/wsjt/
+  JTDX 2.2.159     https://github.com/jtdx-project/jtdx-devel

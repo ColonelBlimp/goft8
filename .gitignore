@@ -1,0 +1,27 @@
+# Go build artifacts
+*.exe
+*.test
+*.out
+*.prof
+/goft8
+/cmd/goft8/goft8
+
+# IDE state
+.idea/goft8.iml
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Fortran build artifacts from internal/fortran_test/ (developer-only,
+# GPLv3 when linked; never committed or distributed)
+/internal/fortran_test/*.mod
+/internal/fortran_test/dump_*
+!/internal/fortran_test/dump_*.f90
+
+# Dumped diagnostic data (regenerated as needed)
+*.bin
+llr_cand*.txt
+fortran_sync8_*.txt
+fortran_decodes_*.txt
