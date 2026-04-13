@@ -12,7 +12,7 @@ import "math"
 //
 // Port of genft8.f90 entry get_ft8_tones_from_77bits (lines 28–44).
 //
-// Steps: append CRC-14 → encode174_91 → Costas sync + Gray-mapped data tones.
+// Steps: append CRC-14 → encodeLDPCNoCRC → Costas sync + Gray-mapped data tones.
 func GenFT8Tones(msgBits [77]int8) [NN]int {
 	// Build 91-bit message: 77 message bits + 14 CRC bits.
 	crc := computeCRC14(msgBits)
@@ -23,7 +23,7 @@ func GenFT8Tones(msgBits [77]int8) [NN]int {
 	}
 
 	// Encode to 174-bit codeword.
-	codeword := encode174_91NoCRC(message91)
+	codeword := encodeLDPCNoCRC(message91)
 
 	// Build tone array: S7 D29 S7 D29 S7
 	var itone [NN]int

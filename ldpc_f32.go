@@ -11,12 +11,12 @@ import (
 	"math"
 )
 
-// Decode174_91_F32 is the hybrid BP/OSD decoder for the (174,91) code,
+// DecodeLDPCF32 is the hybrid BP/OSD decoder for the FT8 (174,91) code,
 // using float32 precision for the BP iterations to match the Fortran
 // implementation's default real type.
 //
-// Parameters and return values are identical to Decode174_91.
-func Decode174_91_F32(llr [LDPCn]float64, keff, maxOSD, ndeep int, apmask [LDPCn]int8) (DecodeResult, bool) {
+// Parameters and return values are identical to DecodeLDPC.
+func DecodeLDPCF32(llr [LDPCn]float64, keff, maxOSD, ndeep int, apmask [LDPCn]int8) (DecodeResult, bool) {
 	const (
 		n             = LDPCn
 		m             = LDPCm

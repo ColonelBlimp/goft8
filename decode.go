@@ -54,6 +54,9 @@ type DecodeCandidate struct {
 	Tones [NN]int
 	// APType indicates the a-priori decoding type used (0 = no AP).
 	APType int
+	// Pass is the 1-based iterative-decode pass on which this signal was
+	// recovered. Zero means unset (e.g., a direct DecodeSingle call).
+	Pass int
 }
 
 // CandidateFreq is a {frequency, DT} pair to try decoding.
@@ -162,7 +165,7 @@ func DecodeSingle(
 	bmeta, bmetb, bmetc, bmetd := ComputeSoftMetrics(&cs)
 
 	// Fortran: real llr(174), scalefac — multiply in float32 precision to
-	// match. Decode174_91 re-truncates at entry for all other call sites.
+	// match. DecodeLDPC re-truncates at entry for all other call sites.
 	var llra, llrb, llrc, llrd [LDPCn]float64
 	sf32 := float32(ScaleFac)
 	for i := 0; i < LDPCn; i++ {
@@ -266,9 +269,9 @@ func DecodeSingle(
 		var result DecodeResult
 		var ok bool
 		if params.UseF32LDPC {
-			result, ok = Decode174_91_F32(llrz, LDPCk, maxosd, norder, apmask)
+			result, ok = DecodeLDPCF32(llrz, LDPCk, maxosd, norder, apmask)
 		} else {
-			result, ok = Decode174_91(llrz, LDPCk, maxosd, norder, apmask)
+			result, ok = DecodeLDPC(llrz, LDPCk, maxosd, norder, apmask)
 		}
 		if !ok {
 			continue
@@ -458,6 +461,7 @@ func DecodeIterative(audio []float32, params DecodeParams, freqMin, freqMax floa
 			seen[msg] = true
 			ndecodes++
 			passDecodes++
+			result.Pass = ipass + 1
 			results = append(results, result)
 
 			// Subtract decoded signal (ft8_decode.f90 line ~207 via ft8b line 435)

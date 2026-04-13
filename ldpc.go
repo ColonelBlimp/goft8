@@ -15,10 +15,10 @@ import (
 )
 
 // ────────────────────────────────────────────────────────────────────────────
-// DecodeResult holds the output of Decode174_91.
+// DecodeResult holds the output of DecodeLDPC.
 // ────────────────────────────────────────────────────────────────────────────
 
-// DecodeResult holds the output of Decode174_91.
+// DecodeResult holds the output of DecodeLDPC.
 type DecodeResult struct {
 	Message91   [LDPCk]int8
 	Codeword    [LDPCn]int8
@@ -91,11 +91,11 @@ func ldpcGenerator() *[LDPCm][LDPCk]int8 {
 	return &ldpcGen
 }
 
-// encode174_91NoCRC encodes a 91-bit message into a 174-bit codeword
+// encodeLDPCNoCRC encodes a 91-bit message into a 174-bit codeword
 // without recomputing CRC.
 //
 // Port of subroutine encode174_91_nocrc from wsjt-wsjtx/lib/ft8/encode174_91.f90.
-func encode174_91NoCRC(message91 [LDPCk]int8) [LDPCn]int8 {
+func encodeLDPCNoCRC(message91 [LDPCk]int8) [LDPCn]int8 {
 	gen := ldpcGenerator()
 	var cw [LDPCn]int8
 	for i := 0; i < LDPCk; i++ {
@@ -112,10 +112,10 @@ func encode174_91NoCRC(message91 [LDPCk]int8) [LDPCn]int8 {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
-// Decode174_91 — hybrid BP/OSD decoder
+// DecodeLDPC — hybrid BP/OSD decoder
 // ────────────────────────────────────────────────────────────────────────────
 
-// Decode174_91 is the hybrid BP/OSD decoder for the (174,91) code.
+// DecodeLDPC is the hybrid BP/OSD decoder for the FT8 (174,91) code.
 //
 //	maxOSD < 0: BP only
 //	maxOSD = 0: BP then one OSD call with channel LLRs
@@ -127,7 +127,7 @@ func encode174_91NoCRC(message91 [LDPCk]int8) [LDPCn]int8 {
 //	4=order-2+pre1+pre2, 5=order-3+pre, 6=order-4+pre.
 //
 // Port of subroutine decode174_91 from wsjt-wsjtx/lib/ft8/decode174_91.f90.
-func Decode174_91(llr [LDPCn]float64, keff, maxOSD, ndeep int, apmask [LDPCn]int8) (DecodeResult, bool) {
+func DecodeLDPC(llr [LDPCn]float64, keff, maxOSD, ndeep int, apmask [LDPCn]int8) (DecodeResult, bool) {
 	const (
 		n             = LDPCn
 		m             = LDPCm

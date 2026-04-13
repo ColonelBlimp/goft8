@@ -22,14 +22,14 @@ var (
 	packA4 = " ABCDEFGHIJKLMNOPQRSTUVWXYZ"           // 27 chars
 )
 
-// ihashcall computes a hash of a callsign for non-standard call encoding.
+// hashCall computes a hash of a callsign for non-standard call encoding.
 //
 // Port of integer function ihashcall from packjt77.f90 lines 64–79.
 //
 // Parameters:
 //   - callsign: up to 11 characters
 //   - m: number of hash bits (10, 12, or 22)
-func ihashcall(callsign string, m int) int {
+func hashCall(callsign string, m int) int {
 	c := " 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ/"
 	// Pad or truncate to 11 characters
 	cs := callsign
@@ -52,12 +52,12 @@ func ihashcall(callsign string, m int) int {
 	return int(result)
 }
 
-// stdcall checks if a callsign has standard ITU format.
+// isStdCall checks if a callsign has standard ITU format.
 //
 // Port of subroutine stdcall from wsjt-wsjtx/lib/qra/q65/q65_set_list.f90.
 //
 // Standard format: prefix (1-2 letters + optional digit) + area digit + suffix (1-3 letters).
-func stdcall(callsign string) bool {
+func isStdCall(callsign string) bool {
 	cs := strings.TrimSpace(callsign)
 	n := len(cs)
 	if n < 2 || n > 6 {
@@ -171,9 +171,9 @@ func pack28(callsign string) int {
 	}
 
 	// Check for standard callsign
-	if !stdcall(cs) {
+	if !isStdCall(cs) {
 		// Non-standard: 22-bit hash
-		n22 := ihashcall(cs, 22)
+		n22 := hashCall(cs, 22)
 		return (packNTOKENS + n22) & ((1 << 28) - 1)
 	}
 
@@ -216,7 +216,7 @@ func pack28(callsign string) int {
 
 	if i1 < 0 || i2 < 0 || i3 < 0 || i4 < 0 || i5 < 0 || i6 < 0 {
 		// Invalid character — fall back to hash
-		n22 := ihashcall(cs, 22)
+		n22 := hashCall(cs, 22)
 		return (packNTOKENS + n22) & ((1 << 28) - 1)
 	}
 

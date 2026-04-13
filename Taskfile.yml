@@ -1,0 +1,88 @@
+version: '3'
+
+vars:
+  PKG: ./...
+  CLI: ./cmd/goft8
+
+tasks:
+  default:
+    desc: Build, vet, and run short tests
+    cmds:
+      - task: build
+      - task: vet
+      - task: test:short
+
+  build:
+    desc: Build every package in the module
+    cmds:
+      - go build {{.PKG}}
+
+  vet:
+    desc: Run go vet on every package
+    cmds:
+      - go vet {{.PKG}}
+
+  fmt:
+    desc: Format all Go sources with gofmt
+    cmds:
+      - gofmt -s -w .
+
+  fmt:check:
+    desc: Fail if any Go source is not gofmt-clean
+    cmds:
+      - test -z "$(gofmt -s -l .)"
+
+  test:
+    desc: Run the full test suite
+    cmds:
+      - go test {{.PKG}}
+
+  test:short:
+    desc: Run the fast subset of the test suite
+    cmds:
+      - go test -short {{.PKG}}
+
+  test:race:
+    desc: Run the test suite under the race detector
+    cmds:
+      - go test -race {{.PKG}}
+
+  cover:
+    desc: Produce a coverage profile at coverage.out
+    cmds:
+      - go test -coverprofile=coverage.out {{.PKG}}
+      - go tool cover -func=coverage.out
+
+  bench:
+    desc: Run all benchmarks
+    cmds:
+      - go test -bench=. -benchmem -run=^$ {{.PKG}}
+
+  cli:
+    desc: Build the goft8 CLI into ./bin/goft8
+    cmds:
+      - mkdir -p bin
+      - go build -o bin/goft8 {{.CLI}}
+
+  cli:run:
+    desc: 'Run the goft8 CLI (pass args after --, e.g. task cli:run -- -wav foo.wav)'
+    cmds:
+      - go run {{.CLI}} {{.CLI_ARGS}}
+
+  tidy:
+    desc: Sync go.mod/go.sum with the source tree
+    cmds:
+      - go mod tidy
+
+  clean:
+    desc: Remove build artifacts
+    cmds:
+      - rm -rf bin coverage.out
+
+  check:
+    desc: Gate used before commit — fmt check, vet, build, tests
+    cmds:
+      - task: fmt:check
+      - task: vet
+      - task: build
+      - task: test

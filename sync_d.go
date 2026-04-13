@@ -19,7 +19,7 @@ import (
 var csync [7][32]complex128
 var csyncOnce sync.Once
 
-func initCsync() {
+func initCSync() {
 	csyncOnce.Do(func() {
 		// sync8d.f90 lines 20–31:
 		//   twopi=8.0*atan(1.0)
@@ -53,7 +53,7 @@ func initCsync() {
 //
 // Port of subroutine sync8d from wsjt-wsjtx/lib/ft8/sync8d.f90.
 func Sync8d(cd0 []complex128, i0 int, ctwk [32]complex128, itwk int) float64 {
-	initCsync()
+	initCSync()
 
 	// sync8d.f90 line 17: p(z1) = real(z1)**2 + aimag(z1)**2
 	p := func(z complex128) float64 {

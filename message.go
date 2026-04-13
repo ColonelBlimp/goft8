@@ -128,7 +128,7 @@ func Unpack77(c77 string) (string, bool) {
 
 	// ── i3=0, n3=0: Free text ──────────────────────────────────────────
 	case i3 == 0 && n3 == 0:
-		msg = unpacktext77(c77[:71])
+		msg = unpackText77(c77[:71])
 		msg = strings.TrimRight(msg, " ")
 		msg = strings.TrimLeft(msg, " ")
 		if msg == "" {
@@ -591,13 +591,13 @@ func unpack28(n28 int) (string, bool) {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
-// unpacktext77 decodes a 71-bit free-text message.
+// unpackText77 decodes a 71-bit free-text message.
 //
 // Port of subroutine unpacktext77 from packjt77.f90 lines 1461–1482.
 // Uses multi-precision short division (mp_short_div) to extract characters.
 // ────────────────────────────────────────────────────────────────────────────
 
-func unpacktext77(c71 string) string {
+func unpackText77(c71 string) string {
 	// Parse 71 bits into 9 bytes: first byte gets 7 bits, remaining 8 get 8 each.
 	var b [9]byte
 	for i := 0; i < 7; i++ {
