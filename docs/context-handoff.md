@@ -48,6 +48,11 @@ The following are in the working tree but **not yet committed**:
   - `ihashcall`            → `hashCall`
   - `stdcall`              → `isStdCall`
   - `initCsync`            → `initCSync`
+- **Shadowing fix in `sync_d.go`:** local `sync := 0.0` accumulator in
+  `Sync8d` renamed to `syncPower` so the `sync` package import is
+  reachable inside the function body. (The package-level `csync`,
+  `csyncOnce`, `csync2`, `initCSync`, `Sync8d`, `HardSync` are
+  substring-only and do not shadow.)
 - **Tooling:** `Taskfile.yml` at repo root (build/vet/test/bench/cli/…).
 
 `go build ./...` and `go vet ./...` both exit 0 with this working set.
