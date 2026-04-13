@@ -75,7 +75,7 @@ func Sync8d(cd0 []complex128, i0 int, ctwk [32]complex128, itwk int) float64 {
 	//     if(i3.ge.0 .and. i3+31.le.NP2-1) z3=sum(cd0(i3:i3+31)*conjg(csync2))
 	//     sync = sync + p(z1) + p(z2) + p(z3)
 	//   enddo
-	sync := 0.0
+	syncPower := 0.0
 	for i := 0; i <= 6; i++ {
 		i1 := i0 + i*32
 		i2 := i1 + 36*32
@@ -116,9 +116,9 @@ func Sync8d(cd0 []complex128, i0 int, ctwk [32]complex128, itwk int) float64 {
 			}
 		}
 
-		sync += p(z1) + p(z2) + p(z3)
+		syncPower += p(z1) + p(z2) + p(z3)
 	}
-	return sync
+	return syncPower
 }
 
 // HardSync counts how many of the 21 Costas-array positions are correctly
